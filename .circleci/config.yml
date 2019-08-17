@@ -5,9 +5,6 @@ jobs:
       - image: mattconway55/hundred-builder:0.0.1 
     working_directory: ~/repo
     steps:
-      - run:
-          name: Setup Git LFS
-          command: git lfs install
       - checkout
       - run: |
           echo $GOOGLE_AUTH | base64 --decode > ${HOME}/worker.json
