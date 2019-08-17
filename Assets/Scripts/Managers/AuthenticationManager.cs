@@ -104,6 +104,17 @@ public class AuthenticationManager : Singleton<AuthenticationManager>
         APIGraphQL.Query(updateBase, new {jwt = myToken, data = baseData}, response => { callback(response.Get<bool>("updateBase")); });
     }
     
+    private string addCoins =
+        @"
+            mutation ($jwt: String!, $amount: Int!){
+                addCoins(jwt: $jwt, amount: $amount)
+            }
+        ";
+    public void AddCoins(int amount, Action<bool> callback)
+    {
+        APIGraphQL.Query(addCoins, new {jwt = myToken, amount = amount}, response => { callback(response.Get<bool>("addCoins")); });
+    }
+    
     private string getCurrentUser =
         @"
             query($jwt: String!) {
@@ -117,7 +128,27 @@ public class AuthenticationManager : Singleton<AuthenticationManager>
         ";
     public void GetCurrentUser(Action<User> callback)
     {
-        APIGraphQL.Query(getCurrentUser, new {jwt = myToken}, response => { callback(response.Get<User>("getCurrentUser")); });
+        APIGraphQL.Query(getCurrentUser, new {jwt = myToken}, response =>
+        {
+            print(response.Raw);
+            callback(response.Get<User>("getCurrentUser"));
+        });
+    }
+    
+    private string getNearbyUsers =
+        @"
+            query($jwt: String!) {
+              getNearbyPlayers(jwt: $jwt) {
+                    _id
+                    username
+                    xp
+                    coins
+                }
+            }
+        ";
+    public void GetNearbyUsers(Action<List<User>> callback)
+    {
+        APIGraphQL.Query(getNearbyUsers, new {jwt = myToken}, response => { callback(response.Get<List<User>>("getNearbyPlayers")); });
     }
     
     private string getUser =

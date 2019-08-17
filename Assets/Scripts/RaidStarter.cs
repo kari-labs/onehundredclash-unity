@@ -6,14 +6,19 @@ public class RaidStarter : MonoBehaviour
 {
     private BaseManager theBase;
     public GameObject loading;
+    public GameObject MinionPlacer;
     void Start()
     {
         loading.SetActive(true);
         theBase = FindObjectOfType<BaseManager>();
         AuthenticationManager.Instance.GetBase(RaidManager.Instance.RaidId, baseData =>
         {
-            theBase.Deserialize(baseData.data);
-            loading.SetActive(false);
+            if(baseData != null)
+                theBase.Deserialize(baseData.data);
+            if(MinionPlacer)
+                MinionPlacer.SetActive(true);
+            if(loading)
+                loading.SetActive(false);
         });
     }
 }

@@ -12,6 +12,7 @@
       <Path>ProjectSettings</Path>
     </explicitIncludes>
     <explicitExcludes>
+      <Path>.circleci</Path>
       <Path>.git</Path>
       <Path>.idea</Path>
       <Path>.vs</Path>
@@ -19,6 +20,7 @@
       <Path>Library</Path>
       <Path>Temp</Path>
       <Path>obj</Path>
+      <Path>server</Path>
     </explicitExcludes>
   </component>
 </project>

@@ -19,7 +19,7 @@ public class NameGetter : MonoBehaviour
             {
                 try
                 {
-                    AuthenticationManager.Redirect("https://hundred.kari.dev/logout");
+                    AuthenticationManager.Redirect("https://hundred.kari.dev/");
                 }
                 catch (EntryPointNotFoundException)
                 {

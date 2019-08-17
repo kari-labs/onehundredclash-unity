@@ -71,7 +71,8 @@ public class Minion : MonoBehaviour
             {
                 if (targetTower.name == "BaseTower")
                 {
-                    Debug.Log("Base defeated");
+                    //Debug.Log("Base defeated");
+                    FindObjectOfType<MinionPlacer>().EndRaid(true);
                 }
                 else
                 {
