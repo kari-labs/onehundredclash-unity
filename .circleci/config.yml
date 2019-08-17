@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker: mattconway55/hundred-builder:0.0.1 
+    working_directory: ~/repo
+    steps:
+      - run:
+          name: Setup Git LFS
+          command: git lfs install
+      - checkout
+      - run: |
+          echo $GOOGLE_AUTH | base64 --decode > ${HOME}/worker.json
+          gcloud auth activate-service-account --key-file=${HOME}/worker.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+          gcloud builds submit --tag gcr.io/${GOOGLE_PROJECT_ID}/hundred-game
+          gcloud beta run deploy --image gcr.io/${GOOGLE_PROJECT_ID}/hundred-game --platform managed --region us-central1 --allow-unauthenticated
