@@ -13,10 +13,14 @@ public class BaseAStar : AStar<Vector2Int>
     }
     
     protected override void Neighbors(Vector2Int p, List<Vector2Int> neighbors) {
-        neighbors.Add(p + new Vector2Int(1, 0));
-        neighbors.Add(p + new Vector2Int(-1, 0));
-        neighbors.Add(p + new Vector2Int(0, 1));
-        neighbors.Add(p + new Vector2Int(0, -1));
+        if(p.x < 15)
+            neighbors.Add(p + new Vector2Int(1, 0));
+        if(p.x > -5)
+            neighbors.Add(p + new Vector2Int(-1, 0));
+        if(p.y < 15)
+            neighbors.Add(p + new Vector2Int(0, 1));
+        if(p.x > -5)
+            neighbors.Add(p + new Vector2Int(0, -1));
     }
 
     protected override float Cost(Vector2Int p1, Vector2Int p2)

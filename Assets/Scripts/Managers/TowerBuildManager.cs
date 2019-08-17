@@ -27,15 +27,30 @@ public class TowerBuildManager : MonoBehaviour
             return;
         if (!Input.GetMouseButtonDown(0))
             return;
-        var ray = camera.ScreenPointToRay(Input.mousePosition); 
-        if (Physics.Raycast(ray, out var hit,100.0f, 1 << 8))
+        var ray = camera.ScreenPointToRay(Input.mousePosition);
+        if (!currenttlySelected)
         {
-            var loc = theBase.GetTowerPos(hit.point);
-            var tower = Instantiate(currenttlySelected.towerPrefab);
-            tower.name = currenttlySelected.towerPrefab.name;
-            var success = theBase.PlaceTower(tower, loc.x, loc.y);
-            if(!success)
+        } else if (currenttlySelected is DeleteTowerItem)
+        {
+            if (Physics.Raycast(ray, out var hit, 100.0f, 1 << 9))
+            {
+                var tower = hit.collider.GetComponent<Tower>();
+                if(!tower)
+                    return;
+
+                theBase.grid[tower.xPos, tower.zPos] = null;
                 Destroy(tower.gameObject);
+            }
+        } else {
+            if (Physics.Raycast(ray, out var hit, 100.0f, 1 << 8))
+            {
+                var loc = theBase.GetTowerPos(hit.point);
+                var tower = Instantiate(currenttlySelected.towerPrefab);
+                tower.name = currenttlySelected.towerPrefab.name;
+                var success = theBase.PlaceTower(tower, loc.x, loc.y);
+                if (!success)
+                    Destroy(tower.gameObject);
+            }
         }
     }
 }

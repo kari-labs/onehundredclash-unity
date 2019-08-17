@@ -20,6 +20,11 @@ public class Minion : MonoBehaviour
         theBase = FindObjectOfType<BaseManager>();
     }
 
+    private void Start()
+    {
+        agent.Warp(transform.position);
+    }
+
     private void Update()
     {
         var path = new List<Vector2Int>();

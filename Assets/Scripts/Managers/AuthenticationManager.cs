@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GraphQL;
 using UnityEngine;
 
@@ -23,11 +24,31 @@ public class Base
 
 public class AuthenticationManager : Singleton<AuthenticationManager>
 {
+    [DllImport("__Internal")]
+    private static extern string GetSavedJWT();
+    
+    [DllImport("__Internal")]
+    public static extern void Redirect(string url);
+
+    public User Myself;
     private string myToken = "";
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        var token = PlayerPrefs.GetString("jwt");
+        var token = "";
+
+        try
+        {
+            token = GetSavedJWT();
+        }
+        catch (EntryPointNotFoundException ex)
+        {
+            
+        }
+
+        if(token == "")
+            token = PlayerPrefs.GetString("jwt");
+        
         if (token != "")
         {
             myToken = token;
@@ -81,6 +102,22 @@ public class AuthenticationManager : Singleton<AuthenticationManager>
     public void UpdateBase(string baseData, Action<bool> callback)
     {
         APIGraphQL.Query(updateBase, new {jwt = myToken, data = baseData}, response => { callback(response.Get<bool>("updateBase")); });
+    }
+    
+    private string getCurrentUser =
+        @"
+            query($jwt: String!) {
+              getCurrentUser(jwt: $jwt) {
+                    _id
+                    username
+                    xp
+                    coins
+                }
+            }
+        ";
+    public void GetCurrentUser(Action<User> callback)
+    {
+        APIGraphQL.Query(getCurrentUser, new {jwt = myToken}, response => { callback(response.Get<User>("getCurrentUser")); });
     }
     
     private string getUser =
